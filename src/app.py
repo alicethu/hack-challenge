@@ -60,7 +60,7 @@ def create_favorite(user_id):
     if not favorite:
         return json.dumps({'success': False, 'error': 'Spot not found!'}), 404
     user.favorites.append(favorite)
-    #favorite.users.append(user)
+    #favorite.users.append(user)   #something's wrong with this
     favorite.numOfFavorited += 1
     db.session.add(favorite)
     db.session.commit()
@@ -78,10 +78,10 @@ def remove_favorite(user_id):
     if not favorite:
         return json.dumps({'success': False, 'error': 'Spot not found!'}), 404
     user.favorites.remove(favorite)
-    #favorite.users.remove(user)
+    #favorite.users.remove(user)    #something's wrong with this
     favorite.numOfFavorited -= 1
     db.session.commit()
-    return json.dumps({'success': True, 'data': user.serialize()}), 201  #depends on whether you want the added spot or user added to be serialized
+    return json.dumps({'success': True, 'data': user.serialize()}), 201  #depends on whether you want the deleted spot or user added to be serialized
 
 
 if __name__ == '__main__':
