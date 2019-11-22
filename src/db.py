@@ -41,7 +41,7 @@ class Spot(db.Model):
     name = db.Column(db.String, nullable=False)
     numOfFavorited = db.Column(db.Integer, nullable=False)
     users = db.relationship('User', secondary=favorites_table, back_populates='favorites')
-    tags = []
+    tags = []  #pickletype???
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', '')
