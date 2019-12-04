@@ -38,12 +38,14 @@ def create_user():
 def create_spot():
     post_body = json.loads(request.data)
     name = post_body['name']
-    #tags = post_body['tags']
+    tagsString = post_body['tags']
+    tags = [x.strip() for x in tagsString.split(',')]
     spot = Spot(
         name = name,
         numOfFavorited = 0
-        #tags = tags
     )
+    for t in tags:
+        spot.tags.append(t)
     db.session.add(spot)
     db.session.commit()
     return json.dumps({'success': True, 'data': spot.serialize()}), 201

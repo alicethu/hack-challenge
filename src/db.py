@@ -41,13 +41,13 @@ class Spot(db.Model):
     name = db.Column(db.String, nullable=False)
     numOfFavorited = db.Column(db.Integer, nullable=False)
     users = db.relationship('User', secondary=favorites_table, back_populates='favorites')
-    tags = []  #pickletype???
+    tags = db.Column(db.PickleType, nullable=True)
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', '')
         self.numOfFavorited = kwargs.get('numOfFavorited', 0)
         self.users = []
-        self.tags = []
+        self.tags = [];
 
     def serialize(self):
         return{
