@@ -47,7 +47,7 @@ class Spot(db.Model):
         self.name = kwargs.get('name', '')
         self.numOfFavorited = kwargs.get('numOfFavorited', 0)
         self.users = []
-        self.tags = [];
+        self.tags = []
 
     def serialize(self):
         return{
