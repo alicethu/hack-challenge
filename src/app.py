@@ -54,6 +54,7 @@ def create_spot():
             isopening = False
     else:
         isopening = False
+        
     tags = [x.strip() for x in tagsString.split(',')]
     spot = Spot(
         name = name,
