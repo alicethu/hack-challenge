@@ -57,7 +57,6 @@ class Spot(db.Model):
         self.imageurl = kwargs.get('imageurl', '')
         self.isopening = kwargs.get('isopening', True)
 
-
     def serialize(self):
         return{
             'id': self.id,
