@@ -1,0 +1,6 @@
+version: '3'
+services:
+      hack-challenge:
+          image: alicethu/spots
+          ports:
+              - "5000:5000"
