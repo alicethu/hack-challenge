@@ -1,6 +1,8 @@
 import json
 from db import db, Spot, User
 from flask import Flask, request
+from datetime import datetime
+
 
 db_filename = "hack_challenge.db"
 app = Flask(__name__)
@@ -39,10 +41,28 @@ def create_spot():
     post_body = json.loads(request.data)
     name = post_body['name']
     tagsString = post_body['tags']
+    opening = post_body['opening']
+    closing = post_body['closing']
+    imageurl = post_body['imageurl']
+    #determine whether it is opening or closing based on current time
+    nowHour = datetime.now().hour
+    nowMin = datetime.now().min
+    if nowHour>int(opening[0:opening.find(':')]) or (nowHour==int(opening[0:openin.find(':')]) and nowMin >= int(opening[opening.find(':')+1:])):
+        if nowHour<int(closing[0:closing.find(':')]) or (nowHour==int(closing[0:closing.find(':')]) and nowMin <= int(closing[closing.find(':')+1:])):
+            isopening = True
+        else:
+            isopening = False
+    else:
+        isopening = False
+
     tags = [x.strip() for x in tagsString.split(',')]
     spot = Spot(
         name = name,
-        numOfFavorited = 0
+        numOfFavorited = 0,
+        opening = opening,
+        closing = closing,
+        isopening = isopening,
+        imageurl = imageurl
     )
     for t in tags:
         spot.tags.append(t)

@@ -42,17 +42,29 @@ class Spot(db.Model):
     numOfFavorited = db.Column(db.Integer, nullable=False)
     users = db.relationship('User', secondary=favorites_table, back_populates='favorites')
     tags = db.Column(db.PickleType, nullable=True)
+    opening = db.Column(db.String, nullable=False)
+    closing = db.Column(db.String, nullable=False)
+    isopening = db.Column(db.Boolean, nullable=False)
+    imageurl = db.Column(db.String, nullable=False)
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', '')
         self.numOfFavorited = kwargs.get('numOfFavorited', 0)
         self.users = []
         self.tags = []
+        self.opening = kwargs.get('opening', '')
+        self.closing = kwargs.get('closing', '')
+        self.imageurl = kwargs.get('imageurl', '')
+        self.isopening = kwargs.get('isopening', True)
 
     def serialize(self):
         return{
             'id': self.id,
             'name': self.name,
             'numOfFavorited': self.numOfFavorited,
-            'tags': self.tags
+            'tags': self.tags,
+            'opening': self.opening,
+            'closing': self.closing,
+            'isopening': self.isopening,
+            'imageurl': self.imageurl
         }
