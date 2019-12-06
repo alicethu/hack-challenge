@@ -23,6 +23,12 @@ def all_spots():
     res = {'success': True, 'data': [c.serialize() for c in spots]}
     return json.dumps(res), 200
 
+@app.route('/api/spots_by_ranking/')
+def all_spots_by_ranking():
+    spots = Spot.query.order_by(Spot.numOfFavorited.desc())
+    res = {'success': True, 'date':[c.serialize() for c in spots]}
+    return json.dumps(res), 200
+
 #a new user has no favorites
 @app.route('/api/user/', methods=['POST'])
 def create_user():
@@ -33,6 +39,13 @@ def create_user():
     )
     db.session.add(user)
     db.session.commit()
+    return json.dumps({'success': True, 'data': user.serialize()}), 201
+
+@app.route('/api/user/<int:user_id>/')
+def get_user(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return json.dumps({'success': False, 'error': 'User not found!'}), 404
     return json.dumps({'success': True, 'data': user.serialize()}), 201
 
 #tags of a new spot is [] and numOfFavorited = 0
@@ -47,14 +60,14 @@ def create_spot():
     #determine whether it is opening or closing based on current time
     nowHour = datetime.now().hour
     nowMin = datetime.now().min
-    if nowHour>int(opening[0:opening.find(':')]) or (nowHour==int(opening[0:openin.find(':')]) and nowMin >= int(opening[opening.find(':')+1:])):
-        if nowHour<int(closing[0:closing.find(':')]) or (nowHour==int(closing[0:closing.find(':')]) and nowMin <= int(closing[closing.find(':')+1:])):
+    if nowHour>int(opening[0:opening.find(':')]) or (nowHour==int(opening[0:opening.find(':')]) and nowMin >= int(opening[opening.find(':')+1:])):
+        if nowHour<int(closing[0:closing.find(':')]) or (nowHour==int(closing[0:closing.find(':')]) and nowMin < int(closing[closing.find(':')+1:])):
             isopening = True
         else:
             isopening = False
     else:
         isopening = False
-        
+
     tags = [x.strip() for x in tagsString.split(',')]
     spot = Spot(
         name = name,
