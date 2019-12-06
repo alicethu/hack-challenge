@@ -83,9 +83,9 @@ def create_spot():
     db.session.commit()
     return json.dumps({'success': True, 'data': spot.serialize()}), 201
 
-#user adds a favorite spot
+#user adds/removes a favorite spot
 @app.route('/api/user/<int:user_id>/favorite/', methods=['POST'])
-def create_favorite(user_id):
+def favorite(user_id):
     user = User.query.filter_by(id=user_id).first()
     if not user:
         return json.dumps({'success': False, 'error': 'User not found!'}), 404
@@ -94,13 +94,19 @@ def create_favorite(user_id):
     favorite = Spot.query.filter_by(id=spot_id).first()
     if not favorite:
         return json.dumps({'success': False, 'error': 'Spot not found!'}), 404
-    user.favorites.append(favorite)
-    #favorite.users.append(user)   #something's wrong with this
-    favorite.numOfFavorited += 1
-    db.session.add(favorite)
+    if favorite in users.favorites:
+        user.favorites.remove(favorite)
+        #favorite.users.remove(user)    #something's wrong with this
+        favorite.numOfFavorited -= 1
+    else:
+        user.favorites.append(favorite)
+        #favorite.users.append(user)   #something's wrong with this
+        favorite.numOfFavorited += 1
+        db.session.add(favorite)
     db.session.commit()
     return json.dumps({'success': True, 'data': user.serialize()}), 201  #depends on whether you want the added spot or user added to be serialized
 
+"""
 #user deletes a favorite spot
 @app.route('/api/user/<int:user_id>/favorite/', methods=['DELETE'])
 def remove_favorite(user_id):
@@ -117,7 +123,7 @@ def remove_favorite(user_id):
     favorite.numOfFavorited -= 1
     db.session.commit()
     return json.dumps({'success': True, 'data': user.serialize()}), 201  #depends on whether you want the deleted spot or user added to be serialized
-
+"""
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
