@@ -46,7 +46,7 @@ def get_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     if not user:
         return json.dumps({'success': False, 'error': 'User not found!'}), 404
-    return json.dumps({'success': True, 'data': user.serialize()}), 201
+    return json.dumps({'success': True, 'data': user.serialize()}), 200
 
 #tags of a new spot is [] and numOfFavorited = 0
 @app.route('/api/spot/', methods=['POST'])
