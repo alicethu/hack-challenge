@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -58,6 +59,19 @@ class Spot(db.Model):
         self.isopening = kwargs.get('isopening', True)
 
     def serialize(self):
+        nowHour = datetime.now().hour
+        nowMin = datetime.now().minute
+        if nowHour>int(self.opening[0:self.opening.find(':')]) or (nowHour==\
+        int(self.opening[0:self.opening.find(':')]) and nowMin >= \
+        int(self.opening[self.opening.find(':')+1:])):
+            if nowHour<int(self.closing[0:self.closing.find(':')]) or (nowHour\
+            ==int(self.closing[0:self.closing.find(':')]) and nowMin < int(self.\
+            closing[self.closing.find(':')+1:])):
+                self.isopening = True
+            else:
+                self.isopening = False
+        else:
+            self.isopening = False
         return{
             'id': self.id,
             'name': self.name,
