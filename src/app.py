@@ -1,8 +1,6 @@
 import json
 from db import db, Spot, User
 from flask import Flask, request
-from datetime import datetime
-
 
 db_filename = "hack_challenge.db"
 app = Flask(__name__)
@@ -58,15 +56,6 @@ def create_spot():
     closing = post_body['closing']
     imageurl = post_body['imageurl']
     #determine whether it is opening or closing based on current time
-    nowHour = datetime.now().hour
-    nowMin = datetime.now().min
-    if nowHour>int(opening[0:opening.find(':')]) or (nowHour==int(opening[0:opening.find(':')]) and nowMin >= int(opening[opening.find(':')+1:])):
-        if nowHour<int(closing[0:closing.find(':')]) or (nowHour==int(closing[0:closing.find(':')]) and nowMin < int(closing[closing.find(':')+1:])):
-            isopening = True
-        else:
-            isopening = False
-    else:
-        isopening = False
 
     tags = [x.strip() for x in tagsString.split(',')]
     spot = Spot(
@@ -74,7 +63,6 @@ def create_spot():
         numOfFavorited = 0,
         opening = opening,
         closing = closing,
-        isopening = isopening,
         imageurl = imageurl
     )
     for t in tags:
@@ -94,7 +82,7 @@ def favorite(user_id):
     favorite = Spot.query.filter_by(id=spot_id).first()
     if not favorite:
         return json.dumps({'success': False, 'error': 'Spot not found!'}), 404
-    if favorite in users.favorites:
+    if favorite in user.favorites:
         user.favorites.remove(favorite)
         #favorite.users.remove(user)    #something's wrong with this
         favorite.numOfFavorited -= 1
@@ -106,7 +94,6 @@ def favorite(user_id):
     db.session.commit()
     return json.dumps({'success': True, 'data': user.serialize()}), 201  #depends on whether you want the added spot or user added to be serialized
 
-"""
 #user deletes a favorite spot
 @app.route('/api/user/<int:user_id>/favorite/', methods=['DELETE'])
 def remove_favorite(user_id):
@@ -123,7 +110,7 @@ def remove_favorite(user_id):
     favorite.numOfFavorited -= 1
     db.session.commit()
     return json.dumps({'success': True, 'data': user.serialize()}), 201  #depends on whether you want the deleted spot or user added to be serialized
-"""
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
