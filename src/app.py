@@ -27,6 +27,13 @@ def all_spots_by_ranking():
     res = {'success': True, 'date':[c.serialize() for c in spots]}
     return json.dumps(res), 200
 
+@app.route('/api/spot/<int:spot_id>/')
+def get_spot(spot_id):
+    spot = Spot.query.filter_by(id=spot_id).first()
+    if not spot:
+        return json.dumps({'success': False, 'error': 'Spot not found!'}), 404
+    return json.dumps({'success': True, 'data': spot.serialize()}), 200
+
 #a new user has no favorites
 @app.route('/api/user/', methods=['POST'])
 def create_user():
