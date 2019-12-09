@@ -80,6 +80,31 @@ def create_spot():
     db.session.commit()
     return json.dumps({'success': True, 'data': spot.serialize()}), 201
 
+#edit a spot
+@app.route('/api/spot/<int:spot_id>/', methods=['POST'])
+def edit_spot(spot_id):
+    spot = Spot.query.filter_by(id=spot_id).first()
+    post_body = json.loads(request.data)
+    name = post_body['name']
+    tagsString = post_body['tags']
+    opening = post_body['opening']
+    closing = post_body['closing']
+    listview_imageurl = post_body['listview_imageurl']
+    detailedview_imageurl = post_body['detailedview_imageurl']
+    tags = [x.strip() for x in tagsString.split(',')]
+    spot = Spot(
+        name = name,
+        numOfFavorited = 0,
+        opening = opening,
+        closing = closing,
+        listview_imageurl = listview_imageurl,
+        detailedview_imageurl = detailedview_imageurl
+    )
+    for t in tags:
+        spot.tags.append(t)
+    db.session.commit()
+    return json.dumps({'success': True, 'data': spot.serialize()}), 201
+
 #user adds/removes a favorite spot
 @app.route('/api/user/<int:user_id>/favorite/', methods=['POST'])
 def favorite(user_id):
