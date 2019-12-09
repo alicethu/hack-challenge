@@ -61,7 +61,8 @@ def create_spot():
     tagsString = post_body['tags']
     opening = post_body['opening']
     closing = post_body['closing']
-    imageurl = post_body['imageurl']
+    listview_imageurl = post_body['listview_imageurl']
+    detailedview_imageurl = post_body['detailedview_imageurl']
     #determine whether it is opening or closing based on current time
 
     tags = [x.strip() for x in tagsString.split(',')]
@@ -70,7 +71,8 @@ def create_spot():
         numOfFavorited = 0,
         opening = opening,
         closing = closing,
-        imageurl = imageurl
+        listview_imageurl = listview_imageurl,
+        detailedview_imageurl = detailedview_imageurl
     )
     for t in tags:
         spot.tags.append(t)

@@ -46,7 +46,8 @@ class Spot(db.Model):
     opening = db.Column(db.String, nullable=False)
     closing = db.Column(db.String, nullable=False)
     isopening = db.Column(db.Boolean, nullable=False)
-    imageurl = db.Column(db.String, nullable=False)
+    listview_imageurl = db.Column(db.String, nullable=False)
+    detailedview_imageurl = db.Column(db.String, nullable=False)
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', '')
@@ -55,7 +56,8 @@ class Spot(db.Model):
         self.tags = []
         self.opening = kwargs.get('opening', '')
         self.closing = kwargs.get('closing', '')
-        self.imageurl = kwargs.get('imageurl', '')
+        self.listview_imageurl = kwargs.get('listview_imageurl', '')
+        self.detailedview_imageurl = kwargs.get('detailedview_imageurl', '')
         self.isopening = kwargs.get('isopening', True)
 
     def serialize(self):
@@ -80,5 +82,6 @@ class Spot(db.Model):
             'opening': self.opening,
             'closing': self.closing,
             'isopening': self.isopening,
-            'imageurl': self.imageurl
+            'listview_imageurl': self.listview_imageurl,
+            'detailedview_imageurl': self.detailedview_imageurl
         }
